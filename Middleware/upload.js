@@ -11,3 +11,5 @@ const storage = new CloudinaryStorage({
         transformation: [{ width: 500, height: 500, crop: 'limit' }], // Resize images to a maximum of 500x500 pixels
     },
 });
+
+module.exports = multer({ storage });

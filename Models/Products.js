@@ -21,6 +21,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    image: {
+        type: String,
+        required: false
+    }
     
 },
 {timestamps: true} //Date created and updated at

@@ -1,5 +1,5 @@
 const Product = require('../Models/Products');
-
+const upload = require('../Middleware/upload');
 
 // create a new product
 exports.createProduct = async (req, res) => {
@@ -8,7 +8,7 @@ exports.createProduct = async (req, res) => {
         if (!req.body.name || !req.body.size || !req.body.description || !req.body.price || !req.body.quantity) {
             return res.status(400).json({ message: 'All required fields must be provided' });
         }
-        const { name, size, description, price, quantity } = req.body;
+        const { name, image, size, description, price, quantity } = req.body;
 
         const product = new Product({ name, size, description, price, quantity });
 
@@ -17,6 +17,40 @@ exports.createProduct = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error creating product', error: error.message });
     }
+};
+
+//create a product with image upload
+exports.createProductWithImage = async (req, res) => {
+    upload.single('image')(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ message: 'Error uploading image', error: err.message });
+        }
+
+        try {
+            if (!req.body.name || !req.body.size || !req.body.description || !req.body.price || !req.body.quantity) {
+                return res.status(400).json({ message: 'All required fields must be provided' });
+            }
+
+            if (!req.file) {
+                return res.status(400).json({ message: 'Image file is required' });
+            }
+
+            const { name, size, description, price, quantity } = req.body;
+            const product = new Product({
+                name,
+                image: req.file.path,
+                size,
+                description,
+                price,
+                quantity
+            });
+
+            await product.save();
+            res.status(201).json({ message: 'Product created successfully', product });
+        } catch (error) {
+            res.status(500).json({ message: 'Error creating product', error: error.message });
+        }
+    });
 };
 
 //update a product

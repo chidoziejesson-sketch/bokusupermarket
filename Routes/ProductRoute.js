@@ -14,13 +14,15 @@ const productController = require('../Controllers/ProductController');
 // define routes for product operations
 router.post('/createproducts', protect, authorize('superadmin'), productController.createProduct);
 
+router.post('/createproducts-with-image', protect, authorize('superadmin'), productController.createProductWithImage);
+
 router.put('/updateproducts/:id', protect, authorize('superadmin'), productController.updateProduct);
 
 router.get('/getproducts/:id', protect, productController.getProductById);
 
 router.get('/getAllproducts', protect, productController.getAllProducts);
 
-router.delete('/deleteproducts/:id', protect, authorize('superadmin'), productController.deleteProduct);    
+router.delete('/deleteproducts/:id', protect, authorize('superadmin'), productController.deleteProduct);
 
 // export the router
 module.exports = router;
