@@ -72,7 +72,7 @@ exports.loginUser = async (req, res) => {
         const jwt = require('jsonwebtoken');
         const token = jwt.sign({ id: existingUser._id, email: existingUser.email, name: existingUser.name }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.status(200).json({ message: 'Login successful', token });
+        res.status(200).json({ message: 'Login successful', token, role: existingUser.role, HasAdminAccess: existingUser.HasAdminAccess });
     } catch (error) {
         res.status(500).json({ message: 'Error logging in', error: error.message });
     }
