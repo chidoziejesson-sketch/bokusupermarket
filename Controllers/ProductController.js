@@ -1,6 +1,6 @@
 const Product = require('../Models/Products');
 const upload = require('../Middleware/upload');
-
+const sendEmail = require('../Middleware/emailsender');
 // create a new product
 exports.createProduct = async (req, res) => {
     try {
@@ -13,6 +13,12 @@ exports.createProduct = async (req, res) => {
         const product = new Product({ name, size, description, price, quantity });
 
         await product.save();
+
+        //send email notification to admin when a new product is created
+        const subject = 'New Product Created';
+        const text = `A new product has been created:\n\nName: ${name}\nSize: ${size}\nDescription: ${description}\nPrice: ${price}\nQuantity: ${quantity}`;
+        await sendEmail('jesson.emeribe@gmail.com', subject, text);
+
         res.status(201).json({ message: 'Product created successfully', product });
     } catch (error) {
         res.status(500).json({ message: 'Error creating product', error: error.message });
